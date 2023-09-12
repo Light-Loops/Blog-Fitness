@@ -1,51 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, CardContent, CardMedia, Container, Typography, Chip, Grid, ButtonGroup, Button } from '@mui/material';
-import { db } from '../firebase/config';
-import { collection, getDocs, where, query, orderBy, limit } from 'firebase/firestore';
+import { fetchRecentArticles, Article } from '../Api'
 
 export const ArticleList: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [filter, setFilter] = useState<string | null>('2d'); // Inicialmente muestra los últimos 2 días
 
-  interface Article {
-    id: string;
-    title: string;
-    imageUrl: string;
-    tags: string[];
-    date: string;
-  }
-
   const fetchArticles = async (timeFilter: string | null) => {
     try {
-      const articlesCollection = collection(db, 'Articles');
-      let articlesQuery = query(articlesCollection, orderBy('date', 'desc'), limit(2)); // Mostrar solo los 2 más recientes por defecto
-
-      // Aplicar filtros de tiempo si se selecciona uno
-      if (timeFilter === '2d') {
-        const twoDaysAgo = new Date();
-        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-        articlesQuery = query(articlesCollection, orderBy('date', 'desc'), where('date', '>=', twoDaysAgo));
-      } else if (timeFilter === '1w') {
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-        articlesQuery = query(articlesCollection, orderBy('date', 'desc'), where('date', '>=', oneWeekAgo));
-      } else if (timeFilter === '1m') {
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        articlesQuery = query(articlesCollection, orderBy('date', 'desc'), where('date', '>=', oneMonthAgo));
-      }
-
-      const articlesSnapshot = await getDocs(articlesQuery);
-      const articlesList = articlesSnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          title: data.title,
-          imageUrl: data.imageURL,
-          tags: data.tags,
-          date: data.date,
-        } as Article;
-      });
+      const articlesList = await fetchRecentArticles(timeFilter);
       setArticles(articlesList);
     } catch (error) {
       console.error(error);
@@ -84,7 +47,7 @@ export const ArticleList: React.FC = () => {
                   </Typography>
                   <Box mt={1}>
                     {article.tags.map((tag) => (
-                      <Chip key={tag} label={tag} variant="outlined" size="small" color="primary" sx={{ marginRight: 1 }} />
+                      <Chip key={tag} label={tag} variant="outlined" size="small"  sx={{ marginRight: 1, borderColor:'#9ED8DB' }} />
                     ))}
                   </Box>
                 </CardContent>

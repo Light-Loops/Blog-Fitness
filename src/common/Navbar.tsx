@@ -28,7 +28,7 @@ export const Navbar: React.FC<{}> = () => {
     { label: 'Nutricion', path: '/nutricion' },
     { label: 'Entrenamiento', path: '/entrenamiento' },
     { label: 'Estilo de Vida', path: '/estilo-de-vida' },
-    { label: 'Contact', path: '/contact' },
+    { label: 'Contacto', path: '/contacto' },
   ];
 
   return (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Card, CardContent, CardMedia, Container, Typography, Chip, Grid, ButtonGroup, Button } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Typography, Chip, Grid, ButtonGroup, Button } from '@mui/material';
 import { fetchRecentArticles, Article } from '../Api'
+
 
 export const ArticleList: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -20,7 +21,7 @@ export const ArticleList: React.FC = () => {
   }, [filter]);
 
   return (
-    <Container maxWidth="lg">
+    <Box maxWidth="lg">
       <Box py={4}>
         <Typography variant="h4" gutterBottom sx={{ color: '#000000' }}>
           Artículos Recientes
@@ -56,6 +57,6 @@ export const ArticleList: React.FC = () => {
           ))}
         </Grid>
       </Box>
-    </Container>
+    </Box>
   );
 };

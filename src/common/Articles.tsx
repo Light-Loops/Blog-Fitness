@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Box, Card, CardContent, CardMedia, Container, Typography, Chip, Grid, ButtonGroup, Button } from '@mui/material';
 import { fetchRecentArticles, Article } from '../Api'
 
@@ -39,6 +40,7 @@ export const ArticleList: React.FC = () => {
         <Grid container spacing={3}>
           {articles.map((article) => (
             <Grid key={article.id} item xs={12} sm={6} md={4}>
+              <Link to={`/article/${article.id}`} style={{ textDecoration: 'none' }}>
               <Card sx={{ height: '100%' }}>
                 <CardMedia component="img" height="200" image={article.imageUrl} alt={article.title} />
                 <CardContent>
@@ -52,6 +54,7 @@ export const ArticleList: React.FC = () => {
                   </Box>
                 </CardContent>
               </Card>
+              </Link>
             </Grid>
           ))}
         </Grid>

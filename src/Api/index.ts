@@ -1,9 +1,10 @@
 import { db } from '../firebase/config';
-import { collection, getDocs, where, query, orderBy, limit, QueryDocumentSnapshot } from 'firebase/firestore';
+import { collection, getDocs, where, query, orderBy, limit, QueryDocumentSnapshot, getDoc, doc } from 'firebase/firestore';
 
 export interface Article {
-  id: string;
+  id: string ;
   title: string;
+  content: string;
   imageUrl: string;
   tags: string[];
   date: string;
@@ -34,6 +35,7 @@ export const fetchRecentArticles = async (timeFilter: string | null): Promise<Ar
       return {
         id: doc.id,
         title: data.title,
+        content: data.content,
         imageUrl: data.imageURL,
         tags: data.tags,
         date: data.date,
@@ -41,6 +43,29 @@ export const fetchRecentArticles = async (timeFilter: string | null): Promise<Ar
     });
 
     return articlesList;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+
+export const fetchArticleDetail = async (id: string | undefined): Promise<Article | null> => {
+  try {
+    const articleDoc = await getDocs(collection(db, "Articles"));
+    const article = articleDoc.docs.find((doc: QueryDocumentSnapshot) => doc.id === id);
+    if (article) {
+      const data = article.data();
+      return {
+        id: article.id,
+        title: data.title,
+        content: data.content,
+        imageUrl: data.imageURL,
+        tags: data.tags,
+        date: data.date,
+      };
+    }
+    return null;
   } catch (error) {
     console.error(error);
     throw error;

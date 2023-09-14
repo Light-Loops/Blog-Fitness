@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Box, Card, CardContent, CardMedia, Container, Typography, Chip, Grid, ButtonGroup, Button } from '@mui/material';
 import { fetchRecentArticles, Article } from '../Api'
 
+
 export const ArticleList: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [filter, setFilter] = useState<string | null>('2d'); // Inicialmente muestra los últimos 2 días
@@ -21,7 +22,7 @@ export const ArticleList: React.FC = () => {
   }, [filter]);
 
   return (
-    <Container maxWidth="lg">
+    <Box maxWidth="lg">
       <Box py={4}>
         <Typography variant="h4" gutterBottom sx={{ color: '#000000' }}>
           Artículos Recientes
@@ -59,6 +60,6 @@ export const ArticleList: React.FC = () => {
           ))}
         </Grid>
       </Box>
-    </Container>
+    </Box>
   );
 };

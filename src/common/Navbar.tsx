@@ -28,12 +28,12 @@ export const Navbar: React.FC<{}> = () => {
     { label: 'Nutricion', path: '/nutricion' },
     { label: 'Entrenamiento', path: '/entrenamiento' },
     { label: 'Estilo de Vida', path: '/estilo-de-vida' },
-    { label: 'Contact', path: '/contact' },
+    { label: 'Contacto', path: '/contacto' },
   ];
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="sticky">
+    <Box sx={{ flexGrow: 1 }} >
+      <AppBar position="sticky" sx={{color: "white", bgcolor: "#272727"}}>
         <Toolbar>
           <Container maxWidth="xl">
             <Grid
@@ -83,6 +83,7 @@ export const Navbar: React.FC<{}> = () => {
               </Grid>
               <Button
                 variant="contained"
+                color='error'
                 onClick={() => navigate('/suscribirse')}
               >
                 Suscribirse

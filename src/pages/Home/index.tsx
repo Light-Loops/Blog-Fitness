@@ -27,12 +27,6 @@ export const HomePage: React.FC<Page> = ({title}) => {
         </Box>
       ) : (
         <>
-          {
-            title &&
-            <Typography variant="h5" gutterBottom color="primary" sx={{opacity: 0.5}}>
-            {title}
-            </Typography>
-          }
           <ArticleList />
         </>
         

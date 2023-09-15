@@ -19,7 +19,7 @@ export enum ThemePalette {
 
 const theme = createTheme({
   palette: {
-    mode: 'light',
+    mode: 'dark',
     background: {
       default: ThemePalette.BG,
     },
@@ -77,6 +77,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           color: '#9ED8DB',
+          borderColor: '#9ED8DB',
         },
       },
     },

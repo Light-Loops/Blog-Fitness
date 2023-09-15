@@ -11,6 +11,7 @@ export const AppRouter: React.FC = () => {
     return(
         <Routes>
             <Route path='/' element={<RouterLayout/>}>
+                <Route path='/' element={<HomePage title={"Inicio"}/>}/>
                 <Route path= '/article/:id' element={<ArticleDetail/>}/> 
                 <Route path='/nutricion' element={<HomePage title={"Nutrición"}/>}/>
                 <Route path='/entrenamiento' element={<HomePage title={"Entrenamiento"}/>}/>
@@ -18,8 +19,7 @@ export const AppRouter: React.FC = () => {
                 <Route path='/contacto' element={<HomePage title={"Contacto"}/>}/>
                 <Route path='/suscribirse' element={<SuscribePage/> }/>
                 <Route path="/*" element={<Navigate to={"/"} />} />
-            </Route>
-            
+            </Route>  
         </Routes>
     )
 }

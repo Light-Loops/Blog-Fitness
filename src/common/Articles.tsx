@@ -50,7 +50,7 @@ export const ArticleList: React.FC = () => {
                   </Typography>
                   <Box mt={1}>
                     {article.tags.map((tag) => (
-                      <Chip key={tag} label={tag} variant="outlined" size="small"  sx={{ marginRight: 1, borderColor:'#9ED8DB' }} />
+                      <Chip key={tag} label={tag} variant="outlined" size="small"  sx={{ marginRight: 1}} />
                     ))}
                   </Box>
                 </CardContent>

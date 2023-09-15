@@ -77,6 +77,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           color: '#9ED8DB',
+          borderColor: '#9ED8DB',
         },
       },
     },

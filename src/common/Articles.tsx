@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Card, CardContent, CardMedia, Container, Typography, Chip, Grid, ButtonGroup, Button } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Container, Typography, Chip, Grid } from '@mui/material';
 import { fetchArticlesByCategory, Article } from '../Api';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 export const ArticleList: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [categoryFilter, setCategoryFilter] = useState<string | null>(null); 
+  const categoryFilter = useSelector((state: RootState) => state.category); 
 
   const fetchArticles = async (categoryFilter: string | null) => {
     try {
@@ -19,28 +21,13 @@ export const ArticleList: React.FC = () => {
   useEffect(() => {
     fetchArticles(categoryFilter);
   }, [categoryFilter]);
-  
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{alignItems:'center'}}>
       <Box py={4}>
         <Typography variant="h4" gutterBottom sx={{ color: '#000000' }}>
           Artículos Recientes
         </Typography>
-        <ButtonGroup  sx={{ marginBottom: 2 }}>
-          <Button onClick={() => setCategoryFilter(null)} variant={categoryFilter === null ? 'contained' : 'outlined'}>
-            Todos
-          </Button>
-          <Button onClick={() => setCategoryFilter('Nutrición')} variant={categoryFilter === 'Nutrición' ? 'contained' : 'outlined'}>
-            Nutrición
-          </Button>
-          <Button onClick={() => setCategoryFilter('Entrenamiento')} variant={categoryFilter === 'Entrenamiento' ? 'contained' : 'outlined'}>
-            Entrenamiento
-          </Button>
-          <Button onClick={() => setCategoryFilter('Estilo de Vida')} variant={categoryFilter === 'Estilo de Vida' ? 'contained' : 'outlined'}>
-            Estilo de Vida
-          </Button>
-        </ButtonGroup>
         <Grid container spacing={3}>
           {articles.map((article) => (
             <Grid key={article.id} item xs={12} sm={6} md={4}>

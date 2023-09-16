@@ -33,7 +33,6 @@ export const Navbar: React.FC = () => {
     { label: 'Nutricion', category: 'Nutrición' },
     { label: 'Entrenamiento', category: 'Entrenamiento' },
     { label: 'Estilo de Vida', category: 'Estilo de Vida' },
-    { label: 'Contact', category: 'Contact' },
   ];
 
   return (
@@ -90,7 +89,7 @@ export const Navbar: React.FC = () => {
               </Grid>
               <Button
                 variant="contained"
-                onClick={() => navigate('/suscribirse')}
+                href='#footer'
               >
                 Suscribirse
               </Button>

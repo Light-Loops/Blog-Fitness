@@ -1,16 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppBar, Box, Container, Grid, IconButton, Toolbar, Typography, Button, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close'; 
 import {useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setCategory } from '../redux/categorySlice';
+import {  fetchArticlesData } from '../Api';
+import { setArticles } from '../redux/articleSlice';
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const articlesList = await fetchArticlesData();
+        dispatch(setArticles(articlesList));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchArticles();
+  }, [dispatch]);
 
   const handleMobileMenuToggle = () => {
     if (isMobileMenuOpen) {
@@ -21,18 +34,19 @@ export const Navbar: React.FC = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen); 
   };
 
-  const handleCategoryFilter = (category: string | null) => {
-    dispatch(setCategory(category));
+  const handleCategoryFilter = (filter:any | null) => {
+    navigate(filter.link);
     if (window.innerWidth <= 600) { 
       handleMobileMenuToggle(); 
     }
   };
 
+
   const navbarLinks = [
-    { label: 'Inicio', category: 'Todos' },
-    { label: 'Nutricion', category: 'Nutrición' },
-    { label: 'Entrenamiento', category: 'Entrenamiento' },
-    { label: 'Estilo de Vida', category: 'Estilo de Vida' },
+    { label: 'Inicio', category: 'Todos', link: '/'},
+    { label: 'Nutrición', category: 'Nutrición', link: '/Nutrición'},
+    { label: 'Entrenamiento', category: 'Entrenamiento', link: '/Entrenamiento'},
+    { label: 'Estilo de vida', category: 'Estilo de vida', link: '/Estilo-de-vida' },
   ];
 
   return (
@@ -69,7 +83,7 @@ export const Navbar: React.FC = () => {
                   anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                 >
                   {navbarLinks.map((filter) => (
-                    <MenuItem key={filter.category} onClick={() => handleCategoryFilter(filter.category)}>
+                    <MenuItem key={filter.category} onClick={() => handleCategoryFilter(filter)}>
                       {filter.label}
                     </MenuItem>
                   ))}
@@ -81,7 +95,7 @@ export const Navbar: React.FC = () => {
                     key={filter.category}
                     variant="button"
                     sx={{ color: '#e9fff9', mr: '30px', cursor: 'pointer' }}
-                    onClick={() => handleCategoryFilter(filter.category)}
+                    onClick={() => handleCategoryFilter(filter)}
                   >
                     {filter.label}
                   </Typography>

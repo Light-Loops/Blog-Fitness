@@ -11,10 +11,10 @@ export const AppRouter: React.FC = () => {
         <Routes>
             <Route path='/' element={<RouterLayout/>}>
                 <Route path='/' element={<HomePage title={"Inicio"}/>}/>
-                <Route path= '/article/:id' element={<ArticleDetail/>}/> 
-                <Route path='/nutricion' element={<HomePage title={"Nutrición"}/>}/>
-                <Route path='/entrenamiento' element={<HomePage title={"Entrenamiento"}/>}/>
-                <Route path='/estilo-de-vida' element={<HomePage title={"Estilo de vida"}/>}/>
+                <Route path= '/article/:title' element={<ArticleDetail/>}/> 
+                <Route path='/Nutrición' element={<HomePage title={"Nutrición"}/>}/>
+                <Route path='/Entrenamiento' element={<HomePage title={"Entrenamiento"}/>}/>
+                <Route path='/Estilo-de-vida' element={<HomePage title={"Estilo de vida"}/>}/>
                 <Route path="/*" element={<Navigate to={"/"} />} />
             </Route>  
         </Routes>

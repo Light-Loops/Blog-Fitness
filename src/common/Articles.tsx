@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Box, Card, CardContent, CardMedia, Container, Typography, Chip, Grid } from '@mui/material';
-import { fetchArticlesByCategory, Article } from '../Api';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
+import { setCategory } from '../redux/categorySlice';
 
 export const ArticleList: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
+ 
+  const location = useLocation();
+  const dispatch = useDispatch();
   const categoryFilter = useSelector((state: RootState) => state.category); 
-
-  const fetchArticles = async (categoryFilter: string | null) => {
-    try {
-      const articlesList = await fetchArticlesByCategory(categoryFilter);
-      setArticles(articlesList);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const {articles} = useSelector((state: RootState) => state.article); 
   
   useEffect(() => {
-    fetchArticles(categoryFilter);
-  }, [categoryFilter]);
-
+      try {
+        const category = decodeURIComponent(location.pathname.replace(/\//g, '').replace(/-/g, ' ')).normalize("NFC");
+        dispatch(setCategory(category));
+      } catch (error) {
+        console.error(error);
+      }
+  }, [dispatch, location]);
+  
   return (
     <Container maxWidth="lg" sx={{alignItems:'center'}}>
       <Box py={4}>
@@ -29,9 +28,11 @@ export const ArticleList: React.FC = () => {
           Artículos Recientes
         </Typography>
         <Grid container spacing={3}>
-          {articles.map((article) => (
+          { articles
+            .filter((article) => categoryFilter === "" || article.category === categoryFilter)
+            .map((article) => (
             <Grid key={article.id} item xs={12} sm={6} md={4}>
-              <Link to={`/article/${article.id}`} style={{ textDecoration: 'none' }}>
+              <Link to={`/article/${article.title}`} style={{ textDecoration: 'none' }}>
                 <Card sx={{ height: '100%' }}>
                   <CardMedia component="img" height="200" image={article.imageUrl} alt={article.title} />
                   <CardContent>

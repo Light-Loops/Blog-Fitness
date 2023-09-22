@@ -1,5 +1,8 @@
-import { db } from '../firebase/config';
+import { UserCredential, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../firebase/config';
 import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot } from 'firebase/firestore';
+import { Dispatch } from '@reduxjs/toolkit';
+import { checkingCredentials, login, logout } from '../redux/authSlice';
 
 export interface Article {
   id: string;
@@ -10,6 +13,21 @@ export interface Article {
   date: string;
   category: string;
 }
+
+export interface Credetials {
+  email: string;
+  password: string;
+  displayName?: string;
+}
+
+export interface SignInResult {
+  ok: boolean;
+  displayName?: string | null;
+  email?: string | null;
+  uid?: string | null;
+  errorMessage?: string | null;
+};
+
 
 export const fetchArticlesByCategory = async (categoryFilter: string | null): Promise<Article[]> => {
   try {
@@ -96,3 +114,56 @@ export const fetchArticlesData = async (): Promise<Article[]> => {
     throw error;
   }
 };
+
+export const checkingAuthentication = () => {
+  return async(dispatch: Dispatch) => {
+      dispatch(checkingCredentials());
+  }
+}
+
+export const loginWithEmailPassword = async({email, password}: Credetials): Promise<SignInResult> => {
+  try {
+    const result: UserCredential = await signInWithEmailAndPassword(auth,email,password);
+    const {displayName, uid} = result.user;
+    console.log(result);
+    return {
+      ok: true,
+      uid, 
+      email, 
+      displayName
+    }
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    return {
+      ok: false,
+      errorMessage,
+    };
+  }
+}
+
+export const startLoginWithEmailPassword = ({email,password}:Credetials) => {
+  return async(dispatch: Dispatch) => {
+      dispatch(checkingCredentials());
+
+      const {ok, displayName, uid, errorMessage} = await loginWithEmailPassword({email,password});
+      if(!ok) return dispatch(logout({errorMessage}));
+
+      dispatch(login({uid, displayName, email}))
+  }
+}
+
+export const logoutFirebase = async() => {
+  return await auth.signOut();
+}
+
+export const startLogout = () => {
+  return async(dispatch : Dispatch) => {
+      await logoutFirebase();
+      dispatch(logout({}));
+  }
+}
+
+
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "An unknown error occurred.";
+}

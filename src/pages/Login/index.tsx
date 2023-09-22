@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import {
   Box,
   Button,
@@ -8,37 +8,34 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { UseNotification } from '../../context/notification.context';
+/* import { UseNotification } from '../../context/notification.context'; */
 import { LoginValidate } from '../../utils/validateForm';
 import { useFormik } from 'formik';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import GoogleIcon from '@mui/icons-material/Google';
+import { useAppDispatch } from '../../redux/hooks';
+import { startLoginWithEmailPassword } from '../../Api';
+import { Navigate } from 'react-router-dom';
+
 
 type LoginType = {
-  username: string;
+  email: string;
   password: string;
 };
 
 export const LoginPage: React.FC<{}> = () => {
-  const { getSuccess } = UseNotification();
+  /* const { getSuccess } = UseNotification(); */
+  const distpach = useAppDispatch();
+
   const formik = useFormik<LoginType>({
     initialValues: {
-      username: '',
+      email: '',
       password: '',
     },
     validationSchema: LoginValidate,
     onSubmit: (values: LoginType) => {
-      getSuccess(JSON.stringify(values));
+      distpach(startLoginWithEmailPassword(values));
+      Navigate({to: "/dashboard"})
     },
   });
-
-  const handleFacebookLogin = () => {
-    // Handle Facebook login logic here
-  };
-
-  const handleGoogleLogin = () => {
-    // Handle Google login logic here
-  };
 
   return (
     <Container maxWidth="sm">
@@ -52,22 +49,22 @@ export const LoginPage: React.FC<{}> = () => {
         <Grid item>
           <Paper sx={{ padding: '1.2em', borderRadius: '0.5em',backgroundColor:'#061A26' }}>
             <Typography sx={{ mt: 1, mb: 1 }} variant="h5">
-              Welcome warrior!
+              Fit Way
             </Typography>
             <Box component="form" onSubmit={formik.handleSubmit}>
               <TextField
-                name="username"
+                name="email"
                 margin="normal"
                 type="email"
                 fullWidth
                 label="Email"
                 sx={{ mt: 2, mb: 1.5 }}
-                value={formik.values.username}
+                value={formik.values.email}
                 onChange={formik.handleChange}
                 error={
-                  formik.touched.username && Boolean(formik.errors.username)
+                  formik.touched.email && Boolean(formik.errors.email)
                 }
-                helperText={formik.touched.username && formik.errors.username}
+                helperText={formik.touched.email && formik.errors.email}
               />
               <TextField
                 name="password"
@@ -93,27 +90,6 @@ export const LoginPage: React.FC<{}> = () => {
                 Iniciar sesión
               </Button>
 
-              <Button
-                fullWidth
-                variant="outlined"
-                color="secondary"
-                startIcon={<FacebookIcon />}
-                onClick={handleFacebookLogin}
-                sx={{ mt: 1, mb: 1 }}
-              >
-                Login with Facebook
-              </Button>
-
-              <Button
-                fullWidth
-                variant="outlined"
-                color="secondary"
-                startIcon={<GoogleIcon />}
-                onClick={handleGoogleLogin}
-                sx={{ mt: 1, mb: 3 }}
-              >
-                Login with Google
-              </Button>
             </Box>
           </Paper>
         </Grid>

@@ -4,6 +4,7 @@ export interface Article {
   id: string;
   title: string;
   content: string;
+  author: string;
   imageUrl: string;
   tags: string[];
   date: string;
@@ -29,10 +30,17 @@ const articleSlice = createSlice({
     },
     setActiveArticle: (state, action) =>{
       state.active = action.payload;
-    }
+    },
+    updateArticle: (state, action) => {
+      const updatedArticle = action.payload;
+      const articleIndex = state.articles.findIndex(article => article.id === updatedArticle.id);
+      if (articleIndex !== -1) {
+        state.articles[articleIndex] = updatedArticle;
+      }
+    },
   }
 });
 
-export const {setArticles,setActiveArticle} = articleSlice.actions
+export const {setArticles,setActiveArticle,updateArticle} = articleSlice.actions
 
 export default articleSlice.reducer

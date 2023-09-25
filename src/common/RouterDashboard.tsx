@@ -7,7 +7,6 @@ type Props = {};
 const RouterDashboard = (props: Props) => {
   return (
     <Container>
-      <Typography color={"primary"}>RouterDashboard</Typography>
       <Outlet />
     </Container>
   );

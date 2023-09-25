@@ -1,6 +1,6 @@
 import { UserCredential, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
-import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot } from 'firebase/firestore';
+import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { Dispatch } from '@reduxjs/toolkit';
 import { checkingCredentials, login, logout } from '../redux/authSlice';
 
@@ -10,7 +10,6 @@ export interface Article {
   content: string;
   imageUrl: string;
   tags: string[];
-  date: string;
   category: string;
 }
 
@@ -78,7 +77,6 @@ export const fetchArticleDetail = async (id: string | undefined): Promise<Articl
         content: data.content,
         imageUrl: data.imageURL,
         tags: data.tags,
-        date: data.date,
         category: data.category,
       };
     }
@@ -167,3 +165,20 @@ export const startLogout = () => {
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "An unknown error occurred.";
 }
+
+export const editArticle = async (id: string, updatedArticle: Article) => {
+  try {
+    const articleRef = doc(db, 'Articles', id);
+    await updateDoc(articleRef, {
+      title: updatedArticle.title,
+      content: updatedArticle.content,
+      imageUrl: updatedArticle.imageUrl,
+      tags: updatedArticle.tags,
+      category: updatedArticle.category,
+    });
+    return true; // Indica que la edición fue exitosa
+  } catch (error) {
+    console.error('Error al editar el artículo:', error);
+    return false; // Indica que hubo un error durante la edición
+  }
+};

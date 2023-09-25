@@ -59,10 +59,8 @@ export const Navbar: React.FC = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Grid item onClick={() => navigate('/')} sx={{ cursor: 'pointer' }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                  Fit Way
-                </Typography>
+              <Grid item onClick={() => navigate('/')} sx={{ cursor: 'pointer' }} display="flex" alignItems="center" justifyContent="center">
+                  <img width="150px" src="logo-horizontal.svg" alt="Logo FIT AWAY" />
               </Grid>
               <Grid item sx={{ display: { xs: 'block', sm: 'none' } }}>
                 <IconButton

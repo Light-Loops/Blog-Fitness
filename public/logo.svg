@@ -1,0 +1,27 @@
+<svg id="ef9f2ed8-05f7-4fe5-93ea-3e20b38dfec7" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 173.9 183.23">
+  <defs>
+    <style>
+      .a7f6ecf6-b8d4-4b18-82d1-4ee8fbb136e0 {
+        fill: #222831;
+        stroke: #222831;
+        stroke-miterlimit: 10;
+        stroke-width: 5px;
+      }
+
+      .bf8f897c-e548-48ff-be5f-5a15f92059db {
+        fill: #d64045;
+      }
+
+      .f2b6ab95-e457-43fb-b1a3-5f0e966a6dc6 {
+        fill: #444;
+        opacity: 0.15;
+      }
+    </style>
+  </defs>
+  <title>logo</title>
+  <path class="a7f6ecf6-b8d4-4b18-82d1-4ee8fbb136e0" d="M184.45,30.77V160.86a12,12,0,0,1-12,12H161.72l-24.45,23.19-24.45-23.19H27.55a12,12,0,0,1-12-12V30.77a12,12,0,0,1,12-12h144.9A12,12,0,0,1,184.45,30.77Z" transform="translate(-13.05 -16.27)"/>
+  <rect class="bf8f897c-e548-48ff-be5f-5a15f92059db" x="58.54" y="50.95" width="24.06" height="96.11" rx="5.62" transform="translate(128.08 181.73) rotate(180)"/>
+  <rect class="bf8f897c-e548-48ff-be5f-5a15f92059db" x="27.66" y="70.72" width="24.06" height="60.19" rx="5.62" transform="translate(66.33 185.37) rotate(180)"/>
+  <rect class="bf8f897c-e548-48ff-be5f-5a15f92059db" x="77.38" y="75.64" width="83.61" height="21.01"/>
+  <rect class="f2b6ab95-e457-43fb-b1a3-5f0e966a6dc6" x="97.55" y="90.91" width="63.43" height="5.74"/>
+</svg>

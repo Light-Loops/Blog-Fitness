@@ -18,8 +18,10 @@ interface ArticleModalProps {
   id: string;
   title: string;
   content: string;
+  author : string;
   category: string;
   tags: string[];
+  date: string;
   imageUrl: string;
 }
 
@@ -30,24 +32,30 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
   id,
   title,
   content,
+  author,
   category,
   tags,
+  date,
   imageUrl,
 }) => {
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedContent, setEditedContent] = useState(content);
   const [editedCategory, setEditedCategory] = useState(category);
+  const [editedAuthor, setEditedAuthor] = useState(author);
   const [editedTags, setEditedTags] = useState(tags.join(', '));
+  const [editedDate, setEditedDate] = useState(date);
   const [editedImageUrl, setEditedImageUrl] = useState(imageUrl);
   const dispatch = useDispatch();
   
   useEffect(() => {
     setEditedTitle(title);
     setEditedContent(content);
+    setEditedAuthor(author);
     setEditedCategory(category);
     setEditedTags(tags.join(', '));
+    setEditedDate(date);
     setEditedImageUrl(imageUrl);
-  }, [title, content, category, tags, imageUrl]);
+  }, [title, content, author , category, tags, date, imageUrl]);
 
   const handleSave = () => {
     const tagsArray = editedTags.split(', ').map(tag => tag.trim());
@@ -55,8 +63,10 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
       id,
       title: editedTitle,
       content: editedContent,
+      author: editedAuthor,
       category: editedCategory,
       tags: tagsArray,
+      date: editedDate,
       imageUrl: editedImageUrl,
     };
     editArticle(id, editedArticle);
@@ -85,8 +95,18 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           value={editedContent}
           multiline
           onChange={(e) => setEditedContent(e.target.value)}
-          error={!editedTitle} 
-          helperText={!editedTitle ? 'Este campo es requerido' : ''}
+          error={!editedContent}
+          helperText={!editedContent ? 'Este campo es requerido' : ''}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Autor"
+          fullWidth
+          value={editedAuthor}
+          multiline
+          onChange={(e) => setEditedAuthor(e.target.value)}
+          error={!editedAuthor}
+          helperText={!editedAuthor ? 'Este campo es requerido' : ''}
           sx={{ mb: 2 }}
         />
         <TextField
@@ -95,8 +115,8 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           value={editedCategory}
           multiline
           onChange={(e) => setEditedCategory(e.target.value)}
-          error={!editedTitle} 
-          helperText={!editedTitle ? 'Este campo es requerido' : ''}
+          error={!editedCategory} 
+          helperText={!editedCategory ? 'Este campo es requerido' : ''}
           sx={{ mb: 2 }}
         />
         <TextField
@@ -105,8 +125,17 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           value={editedTags}
           multiline
           onChange={(e) => setEditedTags(e.target.value)}
-          error={!editedTitle} 
-          helperText={!editedTitle ? 'Este campo es requerido' : ''}
+          error={!editedTags} 
+          helperText={!editedTags ? 'Este campo es requerido' : ''}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Fecha"
+          fullWidth
+          value={editedDate}
+          multiline
+          error={!editedDate} 
+          helperText={!editedDate ? 'Este campo es requerido' : ''}
           sx={{ mb: 2 }}
         />
         <TextField
@@ -115,8 +144,8 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           value={editedImageUrl}
           multiline
           onChange={(e) => setEditedImageUrl(e.target.value)}
-          error={!editedTitle} 
-          helperText={!editedTitle ? 'Este campo es requerido' : ''}
+          error={!editedImageUrl} 
+          helperText={!editedImageUrl ? 'Este campo es requerido' : ''}
           sx={{ mb: 2 }}
         />
       </DialogContent>

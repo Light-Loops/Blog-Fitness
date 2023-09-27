@@ -64,7 +64,6 @@ const DashboardPage: React.FC = () => {
   };
 
   const saveEditedArticle = (editedArticle: any) => {
-    
     console.log('Artículo editado:', editedArticle);
   };
 
@@ -120,7 +119,7 @@ const DashboardPage: React.FC = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <Box mt={2} display="flex" justifyContent="center">
+        <Box mt={2} display="flex" justifyContent="center" gap={4}>
           <Button
             variant="outlined"
             color="primary"

@@ -8,6 +8,7 @@ export interface Article {
   id: string;
   title: string;
   content: string;
+  author: string;
   imageUrl: string;
   tags: string[];
   category: string;
@@ -48,6 +49,7 @@ export const fetchArticlesByCategory = async (categoryFilter: string | null): Pr
         id: doc.id,
         title: data.title,
         content: data.content,
+        author: data.author,
         imageUrl: data.imageURL,
         tags: data.tags,
         date: data.date,
@@ -75,6 +77,7 @@ export const fetchArticleDetail = async (id: string | undefined): Promise<Articl
         id: article.id,
         title: data.title,
         content: data.content,
+        author: data.author,
         imageUrl: data.imageURL,
         tags: data.tags,
         category: data.category,
@@ -99,6 +102,7 @@ export const fetchArticlesData = async (): Promise<Article[]> => {
         id: doc.id,
         title: data.title,
         content: data.content,
+        author: data.author,
         imageUrl: data.imageURL,
         tags: data.tags,
         date: data.date.seconds,

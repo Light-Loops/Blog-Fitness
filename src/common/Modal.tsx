@@ -24,7 +24,7 @@ interface ArticleModalProps {
   author: string;
   category: string;
   tags: string[];
-  date: number; // Cambiado a número para manejar el timestamp
+  date: number; 
   imageUrl: string;
 }
 
@@ -69,7 +69,7 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
       author: editedAuthor,
       category: editedCategory,
       tags: tagsArray,
-      date: editedDate, // Mantenido como número (timestamp)
+      date: editedDate, 
       imageUrl: editedImageUrl,
     };
     editArticle(id, editedArticle);
@@ -119,6 +119,16 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           error={!editedTitle}
           helperText={!editedTitle ? "Este campo es requerido" : ""}
           sx={{ mb: 2, mt: 2 }}
+        />
+        <TextField
+          label="Autor"
+          fullWidth
+          value={editedAuthor}
+          multiline
+          onChange={(e) => setEditedAuthor(e.target.value)}
+          error={!editedAuthor}
+          helperText={!editedAuthor ? "Este campo es requerido" : ""}
+          sx={{ mb: 2 }}
         />
         <Grid marginBottom={2}>
           <ReactQuill

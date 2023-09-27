@@ -36,7 +36,7 @@ const DashboardPage: React.FC = () => {
     content: '',
     author: '',
     category: '',
-    date: '',
+    date: 0,
     tags: [],
     imageUrl: '',
   });
@@ -88,7 +88,6 @@ const DashboardPage: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Título</TableCell>
-                <TableCell>Autor</TableCell>
                 <TableCell>Categoría</TableCell>
                 <TableCell>Acciones</TableCell>
               </TableRow>
@@ -97,7 +96,6 @@ const DashboardPage: React.FC = () => {
               {filteredByTitle.map((article) => (
                 <TableRow key={article.id}>
                   <TableCell>{article.title}</TableCell>
-                  <TableCell>{article.author}</TableCell>
                   <TableCell>{article.category}</TableCell>
                   <TableCell>
                     <IconButton

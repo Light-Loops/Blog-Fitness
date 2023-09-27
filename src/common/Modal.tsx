@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -6,10 +6,13 @@ import {
   DialogActions,
   Button,
   TextField,
-} from '@mui/material';
-import { editArticle } from '../Api';
-import { useDispatch } from 'react-redux';
-import { updateArticle } from '../redux/articleSlice';
+  Grid,
+} from "@mui/material";
+import { editArticle } from "../Api";
+import { useDispatch } from "react-redux";
+import { updateArticle } from "../redux/articleSlice";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 interface ArticleModalProps {
   open: boolean;
@@ -41,14 +44,19 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedContent, setEditedContent] = useState(content);
   const [editedCategory, setEditedCategory] = useState(category);
+<<<<<<< HEAD
   const [editedAuthor, setEditedAuthor] = useState(author);
   const [editedTags, setEditedTags] = useState(tags.join(', '));
   const [editedDate, setEditedDate] = useState(date);
+=======
+  const [editedTags, setEditedTags] = useState(tags.join(", "));
+>>>>>>> dev-jfpanchi
   const [editedImageUrl, setEditedImageUrl] = useState(imageUrl);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     setEditedTitle(title);
+<<<<<<< HEAD
     setEditedContent(content);
     setEditedAuthor(author);
     setEditedCategory(category);
@@ -56,9 +64,15 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
     setEditedDate(date);
     setEditedImageUrl(imageUrl);
   }, [title, content, author , category, tags, date, imageUrl]);
+=======
+    setEditedCategory(category);
+    setEditedTags(tags.join(", "));
+    setEditedImageUrl(imageUrl);
+  }, [title, category, tags, imageUrl]);
+>>>>>>> dev-jfpanchi
 
   const handleSave = () => {
-    const tagsArray = editedTags.split(', ').map(tag => tag.trim());
+    const tagsArray = editedTags.split(", ").map((tag) => tag.trim());
     const editedArticle = {
       id,
       title: editedTitle,
@@ -75,6 +89,34 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
     onClose();
   };
 
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      ["link"],
+      ["clean"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+  ];
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Editar Artículo</DialogTitle>
@@ -85,10 +127,11 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           value={editedTitle}
           multiline
           onChange={(e) => setEditedTitle(e.target.value)}
-          error={!editedTitle} 
-          helperText={!editedTitle ? 'Este campo es requerido' : ''}
+          error={!editedTitle}
+          helperText={!editedTitle ? "Este campo es requerido" : ""}
           sx={{ mb: 2, mt: 2 }}
         />
+<<<<<<< HEAD
         <TextField
           label="Contenido"
           fullWidth
@@ -109,14 +152,32 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           helperText={!editedAuthor ? 'Este campo es requerido' : ''}
           sx={{ mb: 2 }}
         />
+=======
+
+        <Grid marginBottom={2}>
+          <ReactQuill
+            theme="snow"
+            defaultValue={content}
+            onChange={setEditedContent}
+            modules={modules}
+            formats={formats}
+          />
+        </Grid>
+
+>>>>>>> dev-jfpanchi
         <TextField
           label="Categoría"
           fullWidth
           value={editedCategory}
           multiline
           onChange={(e) => setEditedCategory(e.target.value)}
+<<<<<<< HEAD
           error={!editedCategory} 
           helperText={!editedCategory ? 'Este campo es requerido' : ''}
+=======
+          error={!editedTitle}
+          helperText={!editedTitle ? "Este campo es requerido" : ""}
+>>>>>>> dev-jfpanchi
           sx={{ mb: 2 }}
         />
         <TextField
@@ -125,6 +186,7 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           value={editedTags}
           multiline
           onChange={(e) => setEditedTags(e.target.value)}
+<<<<<<< HEAD
           error={!editedTags} 
           helperText={!editedTags ? 'Este campo es requerido' : ''}
           sx={{ mb: 2 }}
@@ -136,6 +198,10 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           multiline
           error={!editedDate} 
           helperText={!editedDate ? 'Este campo es requerido' : ''}
+=======
+          error={!editedTitle}
+          helperText={!editedTitle ? "Este campo es requerido" : ""}
+>>>>>>> dev-jfpanchi
           sx={{ mb: 2 }}
         />
         <TextField
@@ -144,8 +210,13 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           value={editedImageUrl}
           multiline
           onChange={(e) => setEditedImageUrl(e.target.value)}
+<<<<<<< HEAD
           error={!editedImageUrl} 
           helperText={!editedImageUrl ? 'Este campo es requerido' : ''}
+=======
+          error={!editedTitle}
+          helperText={!editedTitle ? "Este campo es requerido" : ""}
+>>>>>>> dev-jfpanchi
           sx={{ mb: 2 }}
         />
       </DialogContent>

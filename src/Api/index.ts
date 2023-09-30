@@ -3,6 +3,7 @@ import { auth, db } from '../firebase/config';
 import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { Dispatch } from '@reduxjs/toolkit';
 import { checkingCredentials, login, logout } from '../redux/authSlice';
+import { format } from 'date-fns';
 
 export interface Article {
   id: string;
@@ -90,6 +91,11 @@ export const fetchArticleDetail = async (id: string | undefined): Promise<Articl
   }
 };
 
+const formatDate = (timestamp: number): string => {
+  return format(new Date(timestamp * 1000), 'dd-MM-yyyy');
+};
+
+
 export const fetchArticlesData = async (): Promise<Article[]> => {
   try {
     const articlesCollection = collection(db, 'Articles');
@@ -105,7 +111,7 @@ export const fetchArticlesData = async (): Promise<Article[]> => {
         author: data.author,
         imageUrl: data.imageURL,
         tags: data.tags,
-        date: data.date.seconds,
+        date: formatDate(data.date.seconds),
         category: data.category,
       };
     });

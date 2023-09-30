@@ -6,6 +6,7 @@ import {useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {  fetchArticlesData } from '../Api';
 import { setArticles } from '../redux/articleSlice';
+import logoHorizontal from '../assets/img/logo-horizontal.svg';
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ export const Navbar: React.FC = () => {
               alignItems="center"
             >
               <Grid item onClick={() => navigate('/')} sx={{ cursor: 'pointer' }} display="flex" alignItems="center" justifyContent="center">
-                  <img width="150px" src="logo-horizontal.svg" alt="Logo FIT AWAY" />
+                  <img width="150px" src={logoHorizontal} alt="Logo FIT AWAY" />
               </Grid>
               <Grid item sx={{ display: { xs: 'block', sm: 'none' } }}>
                 <IconButton

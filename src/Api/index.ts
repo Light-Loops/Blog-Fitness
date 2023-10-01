@@ -1,6 +1,6 @@
 import { UserCredential, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
-import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot, doc, updateDoc, setDoc } from 'firebase/firestore';
 import { Dispatch } from '@reduxjs/toolkit';
 import { checkingCredentials, login, logout } from '../redux/authSlice';
 
@@ -180,9 +180,31 @@ export const editArticle = async (id: string, updatedArticle: Article) => {
       tags: updatedArticle.tags,
       category: updatedArticle.category,
     });
-    return true; // Indica que la edición fue exitosa
+    return true;
   } catch (error) {
     console.error('Error al editar el artículo:', error);
-    return false; // Indica que hubo un error durante la edición
+    return false; 
+  }
+};
+
+export const createNewArticle = async (newArticleData: Article) => {
+  try {
+    const articlesCollection = collection(db, 'Articles');
+    const newArticleRef = doc(articlesCollection);
+
+    await setDoc(newArticleRef, {
+      title: newArticleData.title,
+      content: newArticleData.content,
+      author: newArticleData.author,
+      imageUrl: newArticleData.imageUrl,
+      tags: newArticleData.tags,
+      category: newArticleData.category,
+      date: new Date(),
+    });
+
+    return true;
+  } catch (error) {
+    console.error('Error al crear el artículo:', error);
+    return false;
   }
 };

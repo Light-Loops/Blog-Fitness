@@ -64,6 +64,7 @@ const DashboardPage: React.FC = () => {
     date: 0,
     tags: [],
     imageUrl: '',
+    url: ''
   });
 
   useEffect(() => {
@@ -242,6 +243,7 @@ const DashboardPage: React.FC = () => {
         tags={newArticle.tags}
         date={newArticle.date}
         imageUrl={newArticle.imageUrl}
+        url={selectedArticle.url}
       />
     </Container>
   );

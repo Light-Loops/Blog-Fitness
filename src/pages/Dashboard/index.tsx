@@ -30,7 +30,7 @@ import { Grid } from '@mui/material';
 import { ExitToApp } from '@mui/icons-material';
 import { startLogout } from "../../Api";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-
+import AddBoxIcon from '@mui/icons-material/AddBox';
 const DashboardPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const categoryFilter = useAppSelector((state: RootState) => state.category);
@@ -53,27 +53,48 @@ const DashboardPage: React.FC = () => {
     url: "",
   });
 
+  // Nuevo estado y objeto de artículo para la creación
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newArticle, setNewArticle] = useState({
+    id: '',
+    title: '',
+    content: '',
+    author: '',
+    category: '',
+    date: 0,
+    tags: [],
+    imageUrl: '',
+  });
+
   useEffect(() => {
     dispatch(setCategory(""));
   }, [dispatch]);
 
   const clearCategoryFilter = () => {
-    dispatch(setCategory(""));
+    dispatch(setCategory(''));
   };
+
   const setCategoryFilter = (newCategory: string) => {
     dispatch(setCategory(newCategory));
   };
+
   const filteredArticles = articles.filter(
     (article) => categoryFilter === "" || article.category === categoryFilter
   );
+
   const filteredByTitle = filteredArticles.filter(
     (article) =>
       search === "" ||
       article.title.toLowerCase().includes(search.toLowerCase())
   );
+
   const openEditModal = (article: any) => {
     setSelectedArticle(article);
     setIsEditModalOpen(true);
+  };
+
+  const createNewArticle = (newArticleData:any) => {
+    console.log('Artículo creado:', newArticleData);
   };
 
   const saveEditedArticle = (editedArticle: any) => {
@@ -150,7 +171,7 @@ const DashboardPage: React.FC = () => {
                       color="primary"
                       aria-label="Editar"
                       size="small"
-                      onClick={() => openEditModal(article)} // Abre el modal de edición
+                      onClick={() => openEditModal(article)}
                     >
                       <EditIcon />
                     </IconButton>
@@ -158,7 +179,6 @@ const DashboardPage: React.FC = () => {
                       color="error"
                       aria-label="Eliminar"
                       size="small"
-                      //onClick={() => handleDelete(article.id)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -185,6 +205,14 @@ const DashboardPage: React.FC = () => {
           >
             Siguiente
           </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddBoxIcon />} 
+            onClick={() => setIsCreateModalOpen(true)} 
+          >
+            Crear Artículo
+          </Button>
         </Box>
       </Box>
       <ArticleModal
@@ -200,6 +228,20 @@ const DashboardPage: React.FC = () => {
         date={selectedArticle.date}
         imageUrl={selectedArticle.imageUrl}
         url={selectedArticle.url}
+      />
+
+      <ArticleModal
+        open={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSave={createNewArticle} 
+        id={newArticle.id}
+        title={newArticle.title}
+        content={newArticle.content}
+        author={newArticle.author}
+        category={newArticle.category}
+        tags={newArticle.tags}
+        date={newArticle.date}
+        imageUrl={newArticle.imageUrl}
       />
     </Container>
   );

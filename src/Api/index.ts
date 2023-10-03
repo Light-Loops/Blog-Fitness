@@ -13,6 +13,7 @@ export interface Article {
   imageUrl: string;
   tags: string[];
   category: string;
+  url: string;
 }
 
 export interface Credetials {
@@ -55,6 +56,7 @@ export const fetchArticlesByCategory = async (categoryFilter: string | null): Pr
         tags: data.tags,
         date: data.date,
         category: data.category,
+        url: data.url
       };
     });
 
@@ -82,6 +84,7 @@ export const fetchArticleDetail = async (id: string | undefined): Promise<Articl
         imageUrl: data.imageURL,
         tags: data.tags,
         category: data.category,
+        url: data.url
       };
     }
     return null;
@@ -113,6 +116,7 @@ export const fetchArticlesData = async (): Promise<Article[]> => {
         tags: data.tags,
         date: formatDate(data.date.seconds),
         category: data.category,
+        url: data.url
       };
     });
 
@@ -185,6 +189,7 @@ export const editArticle = async (id: string, updatedArticle: Article) => {
       imageUrl: updatedArticle.imageUrl,
       tags: updatedArticle.tags,
       category: updatedArticle.category,
+      url: updatedArticle.url
     });
     return true; // Indica que la edición fue exitosa
   } catch (error) {

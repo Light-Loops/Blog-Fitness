@@ -26,6 +26,7 @@ interface ArticleModalProps {
   tags: string[];
   date: number; 
   imageUrl: string;
+  url: string;
 }
 
 const ArticleModal: React.FC<ArticleModalProps> = ({
@@ -40,6 +41,7 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
   tags,
   date,
   imageUrl,
+  url
 }) => {
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedContent, setEditedContent] = useState(content);
@@ -47,8 +49,11 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
   const [editedAuthor, setEditedAuthor] = useState(author);
   const [editedTags, setEditedTags] = useState(tags.join(', '));
   const [editedDate, setEditedDate] = useState(date); // Cambiado a número
+  const [editedUrl, setEditedUrl] = useState(url); 
   const [editedImageUrl, setEditedImageUrl] = useState(imageUrl);
   const dispatch = useDispatch();
+
+  
 
   useEffect(() => {
     setEditedTitle(title);
@@ -58,7 +63,23 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
     setEditedTags(tags.join(', '));
     setEditedDate(date);
     setEditedImageUrl(imageUrl);
-  }, [title, content, author, category, tags, date, imageUrl]);
+    setEditedUrl(url);
+  }, [title, content, author, category, tags, date, imageUrl, url]);
+
+
+  const setEditUrlFriendly = (title: string) => {
+    
+    let urlFriendly = title.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    urlFriendly = urlFriendly
+      .toLowerCase()
+      .replace(/[^a-z0-9-]+/g, "-")
+      .replace(/^-+|-+$/g, ""); 
+      
+    setEditedUrl(urlFriendly);
+  }
+  
+  
 
   const handleSave = () => {
     const tagsArray = editedTags.split(", ").map((tag) => tag.trim());
@@ -71,6 +92,7 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
       tags: tagsArray,
       date: editedDate, 
       imageUrl: editedImageUrl,
+      url: editedUrl,
     };
     editArticle(id, editedArticle);
     onSave(editedArticle);
@@ -115,10 +137,23 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           fullWidth
           value={editedTitle}
           multiline
-          onChange={(e) => setEditedTitle(e.target.value)}
+          onChange={(e) => {
+            setEditedTitle(e.target.value);
+            setEditUrlFriendly(e.target.value);
+          }
+          }
           error={!editedTitle}
           helperText={!editedTitle ? "Este campo es requerido" : ""}
-          sx={{ mb: 2, mt: 2 }}
+          sx={{ mb: 1, mt: 2 }}
+        />
+        <TextField
+          fullWidth
+          value={editedUrl}
+          disabled={true}
+          multiline
+          error={!editedTitle}
+          helperText={!editedTitle ? "Este campo es requerido" : ""}
+          sx={{ mb: 2, mt: 1 }}
         />
         <TextField
           label="Autor"

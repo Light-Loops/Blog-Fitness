@@ -22,7 +22,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 export const ArticleDetail: React.FC = () => {
-  const { title } = useParams();
+  const { url } = useParams();
   const { articles, active } = useSelector((state: RootState) => state.article);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ export const ArticleDetail: React.FC = () => {
   useEffect(() => {
     const fetchDetail = async () => {
       try {
-        const activated = articles.find((article) => article.title === title);
+        const activated = articles.find((article) => article.url === url);
         dispatch(setActiveArticle(activated));
         setLoading(false);
       } catch (error) {
@@ -40,7 +40,7 @@ export const ArticleDetail: React.FC = () => {
       }
     };
     fetchDetail();
-  }, [title, dispatch, articles]);
+  }, [url, dispatch, articles]);
 
   if (loading) {
     return (
@@ -90,7 +90,7 @@ export const ArticleDetail: React.FC = () => {
             <Grid container spacing={2} marginTop={4} marginBottom={4} display={'flex'} >
               
               <Hidden mdDown >
-              <Grid item md={4} padding={4} zeroMinWidth position={'fixed'}>
+              <Grid item md={4} xl={3} padding={4} zeroMinWidth position={'fixed'}>
                 <Box mt={1} >
                   <Typography variant="h4" component={"h2"} gutterBottom>
                     {active.title}
@@ -257,10 +257,6 @@ export const ArticleDetail: React.FC = () => {
                 </Box>
               </Grid>
               </Hidden>
-
-              
-
-              
 
               <Grid item md={4} zeroMinWidth>
               <Divider  orientation="vertical" />

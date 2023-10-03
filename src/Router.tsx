@@ -44,7 +44,7 @@ export const AppRouter: React.FC = () => {
       <Route path="/" element={<RouterLayout />}>
         <Route index element={<HomePage title={"Inicio"} />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/article/:title" element={<ArticleDetail />} />
+        <Route path="/article/:url" element={<ArticleDetail />} />
         <Route path="/Nutrición" element={<HomePage title={"Nutrición"} />} />
         <Route path="/Entrenamiento" element={<HomePage title={"Entrenamiento"} />} />
         <Route path="/Estilo-de-vida" element={<HomePage title={"Estilo de vida"} />} />

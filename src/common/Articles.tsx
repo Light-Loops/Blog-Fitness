@@ -32,7 +32,7 @@ export const ArticleList: React.FC = () => {
             .filter((article) => categoryFilter === "" || article.category === categoryFilter)
             .map((article) => (
             <Grid key={article.id} item xs={12} sm={6} md={4}>
-              <Link to={`/article/${article.title}`} style={{ textDecoration: 'none' }}>
+              <Link to={`/article/${article.url}`} style={{ textDecoration: 'none' }}>
                 <Card sx={{ height: '100%' }}>
                   <CardMedia component="img" height="200" image={article.imageUrl} alt={article.title} />
                   <CardContent>

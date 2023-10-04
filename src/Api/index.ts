@@ -1,9 +1,9 @@
 import { UserCredential, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
-import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot, doc, updateDoc, setDoc, addDoc } from 'firebase/firestore';
+import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot, doc, updateDoc, addDoc, deleteDoc } from 'firebase/firestore';
 import { Dispatch } from '@reduxjs/toolkit';
 import { checkingCredentials, login, logout } from '../redux/authSlice';
-import { addNewArticle, savingArticle, updateArticle } from '../redux/articleSlice';
+import { addNewArticle, deletingArticle, savingArticle, updateArticle } from '../redux/articleSlice';
 
 export interface Article {
   id: string;
@@ -29,6 +29,11 @@ export interface SignInResult {
   uid?: string | null;
   errorMessage?: string | null;
 };
+
+export interface idArticle {
+  ok: boolean,
+  id: string | null
+}
 
 
 export const fetchArticlesByCategory = async (categoryFilter: string | null): Promise<Article[]> => {
@@ -200,11 +205,11 @@ export const startEditArticle = (article : Article) => {
   }
 }
 
-export const createNewArticle = async (newArticleData: Article) => {
+export const createNewArticle = async (newArticleData: Article): Promise<idArticle> => {
   try {
     const articlesCollection = collection(db, 'Articles');
     
-    await addDoc(articlesCollection, {
+    const docRef = await addDoc(articlesCollection, {
       title: newArticleData.title,
       content: newArticleData.content,
       author: newArticleData.author,
@@ -215,17 +220,46 @@ export const createNewArticle = async (newArticleData: Article) => {
       url: newArticleData.url
     });
 
-    return true;
+    return {
+      ok: true,
+      id: docRef.id 
+    };
+
   } catch (error) {
     console.error('Error al crear el artículo:', error);
-    return false;
+    return {
+      ok: false,
+      id: null
+    };
   }
 };
 
 export const startCreateNewArticle = (article : Article) => {
   return async(dispatch: Dispatch) => {
     dispatch(savingArticle())
-      await createNewArticle(article);
-    dispatch(addNewArticle());
+      const {ok, id} = await createNewArticle(article);
+      if(!ok) return;
+    dispatch(addNewArticle({...article, id}));
+  }
+}
+
+
+export const deleteArticle = async (id: string) => {
+  try {
+    const articleRef = doc(db, 'Articles', id);
+    await deleteDoc(articleRef);
+
+    return true;
+  } catch (error) {
+    console.error('Error al eliminar el artículo:', error);
+    return false; 
+  }
+};
+
+export const startDeleteArticle = (id: string) => {
+  return async(dispatch: Dispatch) => {
+    dispatch(savingArticle())
+      await deleteArticle(id);
+    dispatch(deletingArticle(id));
   }
 }

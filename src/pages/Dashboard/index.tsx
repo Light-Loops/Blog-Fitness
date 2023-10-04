@@ -28,9 +28,21 @@ import FilterButtons from "../../common/FilterButtons";
 import ArticleModal from "../../common/Modal";
 import { Grid } from '@mui/material';
 import { ExitToApp } from '@mui/icons-material';
-import { createNewArticle, startCreateNewArticle, startEditArticle, startLogout } from "../../Api";
+import {  startCreateNewArticle, startDeleteArticle, startEditArticle, startLogout } from "../../Api";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import AddBoxIcon from '@mui/icons-material/AddBox';
+const articleInitial = {
+  id: "",
+  title: "",
+  content: "",
+  author: "",
+  category: "",
+  date: 0,
+  tags: [],
+  imageUrl: "",
+  url: "",
+}
+
 const DashboardPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const categoryFilter = useAppSelector((state: RootState) => state.category);
@@ -41,31 +53,11 @@ const DashboardPage: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [open, setOpen] = React.useState(false);
 
-  const [selectedArticle, setSelectedArticle] = useState({
-    id: "",
-    title: "",
-    content: "",
-    author: "",
-    category: "",
-    date: 0,
-    tags: [],
-    imageUrl: "",
-    url: "",
-  });
+  const [selectedArticle, setSelectedArticle] = useState(articleInitial);
 
   // Nuevo estado y objeto de artículo para la creación
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [newArticle, setNewArticle] = useState({
-    id: '',
-    title: '',
-    content: '',
-    author: '',
-    category: '',
-    date: 0,
-    tags: [],
-    imageUrl: '',
-    url: ''
-  });
+  const [newArticle, setNewArticle] = useState(articleInitial);
 
   useEffect(() => {
     dispatch(setCategory(""));
@@ -97,12 +89,19 @@ const DashboardPage: React.FC = () => {
   const onCreateNewArticle = (newArticleData:any) => {
     dispatch(startCreateNewArticle(newArticleData));
     console.log('Artículo creado:', newArticleData);
+    setNewArticle(articleInitial);
   };
 
   const saveEditedArticle = (editedArticle: any) => {
     dispatch(startEditArticle(editedArticle));
     console.log('Artículo editado:', editedArticle);
+    setSelectedArticle(articleInitial);
   };
+
+  const onDeleteArticle = (id: string) => {
+    dispatch(startDeleteArticle(id));
+    console.log(`Articulo ${id} Eliminado`);
+  }
 
   const handleCloseDialog = () => {
     setOpen(false);
@@ -181,6 +180,7 @@ const DashboardPage: React.FC = () => {
                     <IconButton
                       color="error"
                       aria-label="Eliminar"
+                      onClick={() => onDeleteArticle(article.id)}
                       size="small"
                     >
                       <DeleteIcon />

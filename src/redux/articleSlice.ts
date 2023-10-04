@@ -37,7 +37,15 @@ const articleSlice = createSlice({
     savingArticle: (state) => {
       state.isSaving = false;
     },
-    addNewArticle: (state) => {
+    addNewArticle: (state,action) => {
+      state.isSaving = true;
+      state.articles.unshift(action.payload);
+    },
+    deletingArticle: (state, action) => {
+      const deletedArticle = action.payload;
+      state.articles = state.articles.filter(
+        (article) => article.id !== deletedArticle
+      );
       state.isSaving = true;
     },
     updateArticle: (state, action) => {
@@ -51,6 +59,6 @@ const articleSlice = createSlice({
   }
 });
 
-export const {setArticles,setActiveArticle,updateArticle, addNewArticle, savingArticle} = articleSlice.actions
+export const {setArticles,setActiveArticle,updateArticle, addNewArticle, savingArticle, deletingArticle} = articleSlice.actions
 
 export default articleSlice.reducer

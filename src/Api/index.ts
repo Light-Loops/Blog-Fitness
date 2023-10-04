@@ -1,9 +1,9 @@
 import { UserCredential, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
-import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot, doc, updateDoc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot, doc, updateDoc, setDoc, addDoc } from 'firebase/firestore';
 import { Dispatch } from '@reduxjs/toolkit';
 import { checkingCredentials, login, logout } from '../redux/authSlice';
-import { format } from 'date-fns';
+import { addNewArticle, savingArticle, updateArticle } from '../redux/articleSlice';
 
 export interface Article {
   id: string;
@@ -67,9 +67,6 @@ export const fetchArticlesByCategory = async (categoryFilter: string | null): Pr
   }
 };
 
-
-
-
 export const fetchArticleDetail = async (id: string | undefined): Promise<Article | null> => {
   try {
     const articleDoc = await getDocs(collection(db, "Articles"));
@@ -94,9 +91,6 @@ export const fetchArticleDetail = async (id: string | undefined): Promise<Articl
   }
 };
 
-const formatDate = (timestamp: number): string => {
-  return format(new Date(timestamp * 1000), 'dd-MM-yyyy');
-};
 
 
 export const fetchArticlesData = async (): Promise<Article[]> => {
@@ -112,9 +106,9 @@ export const fetchArticlesData = async (): Promise<Article[]> => {
         title: data.title,
         content: data.content,
         author: data.author,
-        imageUrl: data.imageURL,
+        imageUrl: data.imageUrl,
         tags: data.tags,
-        date: formatDate(data.date.seconds),
+        date: data.date.seconds,
         category: data.category,
         url: data.url
       };
@@ -198,12 +192,19 @@ export const editArticle = async (id: string, updatedArticle: Article) => {
   }
 };
 
+export const startEditArticle = (article : Article) => {
+  return async(dispatch: Dispatch) => {
+    dispatch(savingArticle())
+      await editArticle(article.id, article);
+    dispatch(updateArticle(article));
+  }
+}
+
 export const createNewArticle = async (newArticleData: Article) => {
   try {
     const articlesCollection = collection(db, 'Articles');
-    const newArticleRef = doc(articlesCollection);
-
-    await setDoc(newArticleRef, {
+    
+    await addDoc(articlesCollection, {
       title: newArticleData.title,
       content: newArticleData.content,
       author: newArticleData.author,
@@ -211,6 +212,7 @@ export const createNewArticle = async (newArticleData: Article) => {
       tags: newArticleData.tags,
       category: newArticleData.category,
       date: new Date(),
+      url: newArticleData.url
     });
 
     return true;
@@ -219,3 +221,11 @@ export const createNewArticle = async (newArticleData: Article) => {
     return false;
   }
 };
+
+export const startCreateNewArticle = (article : Article) => {
+  return async(dispatch: Dispatch) => {
+    dispatch(savingArticle())
+      await createNewArticle(article);
+    dispatch(addNewArticle());
+  }
+}

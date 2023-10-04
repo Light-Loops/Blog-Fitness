@@ -48,11 +48,9 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
   const [editedCategory, setEditedCategory] = useState(category);
   const [editedAuthor, setEditedAuthor] = useState(author);
   const [editedTags, setEditedTags] = useState(tags.join(', '));
-  const [editedDate, setEditedDate] = useState(date); // Cambiado a número
+  const [editedDate, setEditedDate] = useState(date);
   const [editedUrl, setEditedUrl] = useState(url); 
   const [editedImageUrl, setEditedImageUrl] = useState(imageUrl);
-  const dispatch = useDispatch();
-
   
 
   useEffect(() => {
@@ -94,9 +92,7 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
       imageUrl: editedImageUrl,
       url: editedUrl,
     };
-    editArticle(id, editedArticle);
     onSave(editedArticle);
-    dispatch(updateArticle(editedArticle));
     onClose();
   };
 

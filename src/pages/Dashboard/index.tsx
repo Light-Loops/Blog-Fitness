@@ -28,7 +28,7 @@ import FilterButtons from "../../common/FilterButtons";
 import ArticleModal from "../../common/Modal";
 import { Grid } from '@mui/material';
 import { ExitToApp } from '@mui/icons-material';
-import { startLogout } from "../../Api";
+import { createNewArticle, startCreateNewArticle, startEditArticle, startLogout } from "../../Api";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import AddBoxIcon from '@mui/icons-material/AddBox';
 const DashboardPage: React.FC = () => {
@@ -94,12 +94,14 @@ const DashboardPage: React.FC = () => {
     setIsEditModalOpen(true);
   };
 
-  const createNewArticle = (newArticleData:any) => {
+  const onCreateNewArticle = (newArticleData:any) => {
+    dispatch(startCreateNewArticle(newArticleData));
     console.log('Artículo creado:', newArticleData);
   };
 
   const saveEditedArticle = (editedArticle: any) => {
-    console.log("Artículo editado:", editedArticle);
+    dispatch(startEditArticle(editedArticle));
+    console.log('Artículo editado:', editedArticle);
   };
 
   const handleCloseDialog = () => {
@@ -234,7 +236,7 @@ const DashboardPage: React.FC = () => {
       <ArticleModal
         open={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onSave={createNewArticle} 
+        onSave={onCreateNewArticle} 
         id={newArticle.id}
         title={newArticle.title}
         content={newArticle.content}
@@ -243,7 +245,7 @@ const DashboardPage: React.FC = () => {
         tags={newArticle.tags}
         date={newArticle.date}
         imageUrl={newArticle.imageUrl}
-        url={selectedArticle.url}
+        url={newArticle.url}
       />
     </Container>
   );

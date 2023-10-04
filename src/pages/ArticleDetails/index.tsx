@@ -20,6 +20,7 @@ import { setActiveArticle } from "../../redux/articleSlice";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import { format } from 'date-fns';
 
 export const ArticleDetail: React.FC = () => {
   const { url } = useParams();
@@ -82,6 +83,11 @@ export const ArticleDetail: React.FC = () => {
     window.open(whatsappShareURL, "_blank");
   };
 
+  const formatDate = (timestamp: number): string => {
+    return format(new Date(timestamp * 1000), 'dd-MM-yyyy');
+  };
+  
+
   return (
     <Container maxWidth="xl">
       <Box py={4}>
@@ -112,7 +118,7 @@ export const ArticleDetail: React.FC = () => {
                     gutterBottom
                     margin={2}
                   >
-                    Publicado el {active.date}
+                    Publicado el {formatDate(active.date)}
                   </Typography>
 
                   <Box margin={2}>

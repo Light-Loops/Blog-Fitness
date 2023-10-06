@@ -17,6 +17,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Typography,
 } from "@mui/material";
 
 import { RootState } from "../../redux/store";
@@ -31,19 +32,21 @@ import { ExitToApp } from '@mui/icons-material';
 import {  startCreateNewArticle, startDeleteArticle, startEditArticle, startLogout } from "../../Api";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import { UseNotification } from "../../context/notification.context";
 const articleInitial = {
   id: "",
   title: "",
   content: "",
   author: "",
   category: "",
-  date: 0,
+  date: new Date().getTime(),
   tags: [],
   imageUrl: "",
   url: "",
 }
 
 const DashboardPage: React.FC = () => {
+  const { getSuccess, getError } = UseNotification();
   const dispatch = useAppDispatch();
   const categoryFilter = useAppSelector((state: RootState) => state.category);
   const { articles } = useAppSelector((state: RootState) => state.article);
@@ -68,11 +71,14 @@ const DashboardPage: React.FC = () => {
   };
 
   const setCategoryFilter = (newCategory: string) => {
+    console.log(newCategory);
     dispatch(setCategory(newCategory));
   };
 
   const filteredArticles = articles.filter(
-    (article) => categoryFilter === "" || article.category === categoryFilter
+    (article) => {
+      return categoryFilter === "" || article.category === categoryFilter
+    }
   );
 
   const filteredByTitle = filteredArticles.filter(
@@ -88,19 +94,20 @@ const DashboardPage: React.FC = () => {
 
   const onCreateNewArticle = (newArticleData:any) => {
     dispatch(startCreateNewArticle(newArticleData));
-    console.log('Artículo creado:', newArticleData);
+    getSuccess('Artículo creado');
     setNewArticle(articleInitial);
   };
 
   const saveEditedArticle = (editedArticle: any) => {
     dispatch(startEditArticle(editedArticle));
-    console.log('Artículo editado:', editedArticle);
+    getSuccess('Artículo editado');
     setSelectedArticle(articleInitial);
   };
 
   const onDeleteArticle = (id: string) => {
     dispatch(startDeleteArticle(id));
     console.log(`Articulo ${id} Eliminado`);
+    getError('Artículo Eliminado');
   }
 
   const handleCloseDialog = () => {
@@ -119,6 +126,11 @@ const DashboardPage: React.FC = () => {
   return (
     <Container maxWidth="xl">
       <Box py={4}>
+
+        <Typography variant="h4" gutterBottom sx={{ color: '#1D3354', fontWeight: 'bold', textAlign: 'center' }}>
+          PANEL
+        </Typography>
+
         <Grid position={"absolute"} right={12} top={12}>
           <BottomNavigationAction
             label="Salir"
@@ -228,7 +240,7 @@ const DashboardPage: React.FC = () => {
         author={selectedArticle.author}
         category={selectedArticle.category}
         tags={selectedArticle.tags}
-        date={selectedArticle.date}
+        date={new Date(selectedArticle.date * 1000).getTime()}
         imageUrl={selectedArticle.imageUrl}
         url={selectedArticle.url}
       />

@@ -12,7 +12,7 @@ export const Notification: React.FC<NotificationProps> = ({open,message,severity
     return(
         <Snackbar 
         anchorOrigin={{vertical:"top", horizontal:"center"}}
-        autoHideDuration={1000}
+        autoHideDuration={3000}
         open={open}
         onClose={onClose}
         >

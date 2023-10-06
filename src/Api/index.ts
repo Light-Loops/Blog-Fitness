@@ -14,6 +14,7 @@ export interface Article {
   tags: string[];
   category: string;
   url: string;
+  date?: number,
 }
 
 export interface Credetials {
@@ -188,7 +189,9 @@ export const editArticle = async (id: string, updatedArticle: Article) => {
       imageUrl: updatedArticle.imageUrl,
       tags: updatedArticle.tags,
       category: updatedArticle.category,
-      url: updatedArticle.url
+      url: updatedArticle.url,
+      date: new Date(updatedArticle.date!),
+      author: updatedArticle.author,
     });
     return true;
   } catch (error) {
@@ -216,7 +219,7 @@ export const createNewArticle = async (newArticleData: Article): Promise<idArtic
       imageUrl: newArticleData.imageUrl,
       tags: newArticleData.tags,
       category: newArticleData.category,
-      date: new Date(),
+      date: new Date(newArticleData.date!),
       url: newArticleData.url
     });
 

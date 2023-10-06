@@ -39,6 +39,7 @@ const articleSlice = createSlice({
     },
     addNewArticle: (state,action) => {
       state.isSaving = true;
+      action.payload.date = Math.floor(action.payload.date / 1000);
       state.articles.unshift(action.payload);
     },
     deletingArticle: (state, action) => {
@@ -49,6 +50,7 @@ const articleSlice = createSlice({
       state.isSaving = true;
     },
     updateArticle: (state, action) => {
+      action.payload.date = Math.floor(action.payload.date / 1000);
       const updatedArticle = action.payload;
       const articleIndex = state.articles.findIndex(article => article.id === updatedArticle.id);
       if (articleIndex !== -1) {

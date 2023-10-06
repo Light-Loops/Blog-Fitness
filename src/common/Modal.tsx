@@ -11,7 +11,7 @@ import {
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-import { parse, format, add } from 'date-fns';
+import { parse, format} from 'date-fns';
 
 interface ArticleModalProps {
   open: boolean;

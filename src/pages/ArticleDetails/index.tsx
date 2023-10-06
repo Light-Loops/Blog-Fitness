@@ -84,7 +84,6 @@ export const ArticleDetail: React.FC = () => {
   };
 
   const formatDate = (timestamp: number): string => {
-    console.log(format(new Date(timestamp * 1000), 'dd-MM-yyyy'));
     return format(new Date(timestamp * 1000), 'dd-MM-yyyy');
   };
   

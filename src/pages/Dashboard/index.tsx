@@ -27,11 +27,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SearchBar from "../../common/SearchBar";
 import FilterButtons from "../../common/FilterButtons";
 import ArticleModal from "../../common/Modal";
-import { Grid } from '@mui/material';
-import { ExitToApp } from '@mui/icons-material';
-import {  startCreateNewArticle, startDeleteArticle, startEditArticle, startLogout } from "../../Api";
+import { Grid } from "@mui/material";
+import { ExitToApp } from "@mui/icons-material";
+import {
+  startCreateNewArticle,
+  startDeleteArticle,
+  startEditArticle,
+  startLogout,
+} from "../../Api";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import AddBoxIcon from '@mui/icons-material/AddBox';
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import { UseNotification } from "../../context/notification.context";
 const articleInitial = {
   id: "",
@@ -43,7 +48,7 @@ const articleInitial = {
   tags: [],
   imageUrl: "",
   url: "",
-}
+};
 
 const DashboardPage: React.FC = () => {
   const { getSuccess, getError } = UseNotification();
@@ -67,7 +72,7 @@ const DashboardPage: React.FC = () => {
   }, [dispatch]);
 
   const clearCategoryFilter = () => {
-    dispatch(setCategory(''));
+    dispatch(setCategory(""));
   };
 
   const setCategoryFilter = (newCategory: string) => {
@@ -75,11 +80,9 @@ const DashboardPage: React.FC = () => {
     dispatch(setCategory(newCategory));
   };
 
-  const filteredArticles = articles.filter(
-    (article) => {
-      return categoryFilter === "" || article.category === categoryFilter
-    }
-  );
+  const filteredArticles = articles.filter((article) => {
+    return categoryFilter === "" || article.category === categoryFilter;
+  });
 
   const filteredByTitle = filteredArticles.filter(
     (article) =>
@@ -92,23 +95,24 @@ const DashboardPage: React.FC = () => {
     setIsEditModalOpen(true);
   };
 
-  const onCreateNewArticle = (newArticleData:any) => {
+  const onCreateNewArticle = (newArticleData: any) => {
     dispatch(startCreateNewArticle(newArticleData));
-    getSuccess('Artículo creado');
+    getSuccess("Artículo creado");
     setNewArticle(articleInitial);
   };
 
   const saveEditedArticle = (editedArticle: any) => {
     dispatch(startEditArticle(editedArticle));
-    getSuccess('Artículo editado');
+    getSuccess("Artículo editado");
     setSelectedArticle(articleInitial);
   };
 
   const onDeleteArticle = (id: string) => {
     dispatch(startDeleteArticle(id));
     console.log(`Articulo ${id} Eliminado`);
-    getError('Artículo Eliminado');
-  }
+    getError("Artículo Eliminado");
+    setHandleDelete({id: "", title:"", state: false});
+  };
 
   const handleCloseDialog = () => {
     setOpen(false);
@@ -123,11 +127,25 @@ const DashboardPage: React.FC = () => {
     setOpen(false);
   };
 
+  const [handleDelete, setHandleDelete] = React.useState({ id: "", title:"", state: false});
+
+
+  const handleDeleteOpenDialog = (id:string, title:string) => {
+    setHandleDelete({id, title, state: true});
+  };
+
+  const handleDeleteCloseDialog = () => {
+    setHandleDelete({id: "", title:"", state: false});
+  };
+
   return (
     <Container maxWidth="xl">
       <Box py={4}>
-
-        <Typography variant="h4" gutterBottom sx={{ color: '#1D3354', fontWeight: 'bold', textAlign: 'center' }}>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{ color: "#1D3354", fontWeight: "bold", textAlign: "center" }}
+        >
           PANEL
         </Typography>
 
@@ -192,7 +210,7 @@ const DashboardPage: React.FC = () => {
                     <IconButton
                       color="error"
                       aria-label="Eliminar"
-                      onClick={() => onDeleteArticle(article.id)}
+                      onClick={() => handleDeleteOpenDialog(article.id, article.title)}
                       size="small"
                     >
                       <DeleteIcon />
@@ -223,8 +241,8 @@ const DashboardPage: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
-            startIcon={<AddBoxIcon />} 
-            onClick={() => setIsCreateModalOpen(true)} 
+            startIcon={<AddBoxIcon />}
+            onClick={() => setIsCreateModalOpen(true)}
           >
             Crear Artículo
           </Button>
@@ -248,7 +266,7 @@ const DashboardPage: React.FC = () => {
       <ArticleModal
         open={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onSave={onCreateNewArticle} 
+        onSave={onCreateNewArticle}
         id={newArticle.id}
         title={newArticle.title}
         content={newArticle.content}
@@ -259,6 +277,23 @@ const DashboardPage: React.FC = () => {
         imageUrl={newArticle.imageUrl}
         url={newArticle.url}
       />
+
+      <Dialog open={handleDelete.state} onClose={handleDeleteCloseDialog}>
+        <DialogTitle>Confirmar para eliminar</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            ¿Estás seguro de que deseas eliminar el artículo: {handleDelete.title}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCloseDialog} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={() => onDeleteArticle(handleDelete.id)} color="primary">
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

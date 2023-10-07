@@ -36,9 +36,9 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({ onClearCategoryFilter, on
       <Button
         variant="outlined"
         color="primary"
-        onClick={() => onSetCategoryFilter('Estilo de Vida')}
+        onClick={() => onSetCategoryFilter('Estilo de vida')}
       >
-        Estilo de Vida
+        Estilo de vida
       </Button>
     </Box>
   );

@@ -8,11 +8,10 @@ import {
   TextField,
   Grid,
 } from "@mui/material";
-import { editArticle } from "../Api";
-import { useDispatch } from "react-redux";
-import { updateArticle } from "../redux/articleSlice";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+
+import { parse, format} from 'date-fns';
 
 interface ArticleModalProps {
   open: boolean;
@@ -24,7 +23,7 @@ interface ArticleModalProps {
   author: string;
   category: string;
   tags: string[];
-  date: number; 
+  date: number;
   imageUrl: string;
   url: string;
 }
@@ -41,45 +40,38 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
   tags,
   date,
   imageUrl,
-  url
+  url,
 }) => {
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedContent, setEditedContent] = useState(content);
   const [editedCategory, setEditedCategory] = useState(category);
   const [editedAuthor, setEditedAuthor] = useState(author);
-  const [editedTags, setEditedTags] = useState(tags.join(', '));
-  const [editedDate, setEditedDate] = useState(date); // Cambiado a número
-  const [editedUrl, setEditedUrl] = useState(url); 
+  const [editedTags, setEditedTags] = useState(tags.join(", "));
+  const [editedDate, setEditedDate] = useState(date);
+  const [editedUrl, setEditedUrl] = useState(url);
   const [editedImageUrl, setEditedImageUrl] = useState(imageUrl);
-  const dispatch = useDispatch();
-
-  
 
   useEffect(() => {
     setEditedTitle(title);
     setEditedContent(content);
     setEditedAuthor(author);
     setEditedCategory(category);
-    setEditedTags(tags.join(', '));
+    setEditedTags(tags.join(", "));
     setEditedDate(date);
     setEditedImageUrl(imageUrl);
     setEditedUrl(url);
   }, [title, content, author, category, tags, date, imageUrl, url]);
 
-
   const setEditUrlFriendly = (title: string) => {
-    
     let urlFriendly = title.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
     urlFriendly = urlFriendly
       .toLowerCase()
       .replace(/[^a-z0-9-]+/g, "-")
-      .replace(/^-+|-+$/g, ""); 
-      
+      .replace(/^-+|-+$/g, "");
+
     setEditedUrl(urlFriendly);
-  }
-  
-  
+  };
 
   const handleSave = () => {
     const tagsArray = editedTags.split(", ").map((tag) => tag.trim());
@@ -90,13 +82,11 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
       author: editedAuthor,
       category: editedCategory,
       tags: tagsArray,
-      date: editedDate, 
+      date: editedDate,
       imageUrl: editedImageUrl,
       url: editedUrl,
     };
-    editArticle(id, editedArticle);
     onSave(editedArticle);
-    dispatch(updateArticle(editedArticle));
     onClose();
   };
 
@@ -140,8 +130,7 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           onChange={(e) => {
             setEditedTitle(e.target.value);
             setEditUrlFriendly(e.target.value);
-          }
-          }
+          }}
           error={!editedTitle}
           helperText={!editedTitle ? "Este campo es requerido" : ""}
           sx={{ mb: 1, mt: 2 }}
@@ -191,16 +180,19 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           multiline
           onChange={(e) => setEditedTags(e.target.value)}
           error={!editedTags}
-          helperText={!editedTags ? 'Este campo es requerido' : ''}
+          helperText={!editedTags ? "Este campo es requerido" : ""}
           sx={{ mb: 2 }}
         />
         <TextField
           label="Fecha"
+          type="date"
           fullWidth
-          value={new Date(editedDate).toLocaleString()} 
-          multiline
+          value={editedDate
+            ? format(editedDate, 'yyyy-MM-dd')
+            : ''}
+          onChange={(e) => setEditedDate(parse(e.target.value, 'yyyy-MM-dd', new Date()).getTime())}
           error={!editedDate}
-          helperText={!editedDate ? 'Este campo es requerido' : ''}
+          helperText={!editedDate ? "Este campo es requerido o la fecha no es válida" : ""}
           sx={{ mb: 2 }}
         />
         <TextField
@@ -210,7 +202,7 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           multiline
           onChange={(e) => setEditedImageUrl(e.target.value)}
           error={!editedImageUrl}
-          helperText={!editedImageUrl ? 'Este campo es requerido' : ''}
+          helperText={!editedImageUrl ? "Este campo es requerido" : ""}
           sx={{ mb: 2 }}
         />
       </DialogContent>

@@ -1,9 +1,9 @@
 import { UserCredential, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
-import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot, doc, updateDoc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, where, query, orderBy,  QueryDocumentSnapshot, doc, updateDoc, addDoc, deleteDoc } from 'firebase/firestore';
 import { Dispatch } from '@reduxjs/toolkit';
 import { checkingCredentials, login, logout } from '../redux/authSlice';
-import { format } from 'date-fns';
+import { addNewArticle, deletingArticle, savingArticle, updateArticle } from '../redux/articleSlice';
 
 export interface Article {
   id: string;
@@ -14,6 +14,7 @@ export interface Article {
   tags: string[];
   category: string;
   url: string;
+  date?: number,
 }
 
 export interface Credetials {
@@ -29,6 +30,11 @@ export interface SignInResult {
   uid?: string | null;
   errorMessage?: string | null;
 };
+
+export interface idArticle {
+  ok: boolean,
+  id: string | null
+}
 
 
 export const fetchArticlesByCategory = async (categoryFilter: string | null): Promise<Article[]> => {
@@ -67,9 +73,6 @@ export const fetchArticlesByCategory = async (categoryFilter: string | null): Pr
   }
 };
 
-
-
-
 export const fetchArticleDetail = async (id: string | undefined): Promise<Article | null> => {
   try {
     const articleDoc = await getDocs(collection(db, "Articles"));
@@ -94,9 +97,6 @@ export const fetchArticleDetail = async (id: string | undefined): Promise<Articl
   }
 };
 
-const formatDate = (timestamp: number): string => {
-  return format(new Date(timestamp * 1000), 'dd-MM-yyyy');
-};
 
 
 export const fetchArticlesData = async (): Promise<Article[]> => {
@@ -112,9 +112,9 @@ export const fetchArticlesData = async (): Promise<Article[]> => {
         title: data.title,
         content: data.content,
         author: data.author,
-        imageUrl: data.imageURL,
+        imageUrl: data.imageUrl,
         tags: data.tags,
-        date: formatDate(data.date.seconds),
+        date: data.date.seconds,
         category: data.category,
         url: data.url
       };
@@ -189,7 +189,9 @@ export const editArticle = async (id: string, updatedArticle: Article) => {
       imageUrl: updatedArticle.imageUrl,
       tags: updatedArticle.tags,
       category: updatedArticle.category,
-      url: updatedArticle.url
+      url: updatedArticle.url,
+      date: new Date(updatedArticle.date!),
+      author: updatedArticle.author,
     });
     return true;
   } catch (error) {
@@ -198,24 +200,69 @@ export const editArticle = async (id: string, updatedArticle: Article) => {
   }
 };
 
-export const createNewArticle = async (newArticleData: Article) => {
+export const startEditArticle = (article : Article) => {
+  return async(dispatch: Dispatch) => {
+    dispatch(savingArticle())
+      await editArticle(article.id, article);
+    dispatch(updateArticle(article));
+  }
+}
+
+export const createNewArticle = async (newArticleData: Article): Promise<idArticle> => {
   try {
     const articlesCollection = collection(db, 'Articles');
-    const newArticleRef = doc(articlesCollection);
-
-    await setDoc(newArticleRef, {
+    
+    const docRef = await addDoc(articlesCollection, {
       title: newArticleData.title,
       content: newArticleData.content,
       author: newArticleData.author,
       imageUrl: newArticleData.imageUrl,
       tags: newArticleData.tags,
       category: newArticleData.category,
-      date: new Date(),
+      date: new Date(newArticleData.date!),
+      url: newArticleData.url
     });
+
+    return {
+      ok: true,
+      id: docRef.id 
+    };
+
+  } catch (error) {
+    console.error('Error al crear el artículo:', error);
+    return {
+      ok: false,
+      id: null
+    };
+  }
+};
+
+export const startCreateNewArticle = (article : Article) => {
+  return async(dispatch: Dispatch) => {
+    dispatch(savingArticle())
+      const {ok, id} = await createNewArticle(article);
+      if(!ok) return;
+    dispatch(addNewArticle({...article, id}));
+  }
+}
+
+
+export const deleteArticle = async (id: string) => {
+  try {
+    const articleRef = doc(db, 'Articles', id);
+    await deleteDoc(articleRef);
 
     return true;
   } catch (error) {
-    console.error('Error al crear el artículo:', error);
-    return false;
+    console.error('Error al eliminar el artículo:', error);
+    return false; 
   }
 };
+
+export const startDeleteArticle = (id: string) => {
+  return async(dispatch: Dispatch) => {
+    dispatch(savingArticle())
+      await deleteArticle(id);
+    dispatch(deletingArticle(id));
+  }
+}
